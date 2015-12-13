@@ -1,5 +1,7 @@
 # CrapiDocs - Crazy RSpec API Docs
 
+[![Build Status](https://travis-ci.org/mikejholly/crapidocs.svg?branch=master)](https://travis-ci.org/mikejholly/crapidocs)
+
 ## About
 
 CrapiDocs generates API documentation automagically using your tests. It requires _zero_
