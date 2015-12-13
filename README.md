@@ -27,6 +27,7 @@ That's it! A `doc/api.md` file will be generated after your tests complete!
 * Generates **pretty good quality** API documentation for `Rack::Test`-based tests
 * Specify a custom URI path pattern to **capture only relevant endpoints**
 * **Merges request parameters** from multiple tests to determine parameter options
+* Replaces numeric IDs with readible names derived from context
 
 ## Example
 
