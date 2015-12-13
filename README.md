@@ -17,8 +17,8 @@ require 'crapidocs'
 CrapiDocs.start path_filter # See below note
 ```
 
-<small>Note: `path_filter` is a regular expression which tells CrapiDocs which paths should be
-included in the generated docs. Examples: `%r{/}`, `%r{/api/v1}`, etc.</small>
+<sub>Note: `path_filter` is a regular expression which tells CrapiDocs which paths should be
+included in the generated docs. Examples: `%r{/}`, `%r{/api/v1}`, etc.</sub>
 
 That's it! A `doc/api.md` file will be generated after your tests complete!
 
