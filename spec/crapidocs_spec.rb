@@ -48,13 +48,21 @@ describe CrapiDocs do
     before { subject.start(pattern) }
 
     it 'creates a formatter and generates markdown' do
+      formatter = double(:formatter, to_md: '')
       expect(CrapiDocs::Formatter)
         .to receive(:new)
         .with(subject.session)
-        .and_call_original
+        .and_return formatter
+      allow(subject).to receive(:write_file).and_return true
+      subject.done
     end
 
     it 'calls write_file with content' do
+      formatter = double(:formatter, to_md: '')
+      expect(CrapiDocs::Formatter)
+        .to receive(:new)
+        .with(subject.session)
+        .and_return formatter
       expect(subject).to receive(:write_file).and_return true
       subject.done
     end

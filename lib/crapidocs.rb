@@ -2,8 +2,6 @@ require 'rack/test'
 require 'active_support/all'
 
 require_relative 'crapidocs/formatter'
-require_relative 'crapidocs/request'
-require_relative 'crapidocs/response'
 require_relative 'crapidocs/session'
 
 module Rack
@@ -11,9 +9,7 @@ module Rack
     method = instance_method(:request)
     define_method(:request) do |*args, &block|
       result = method.bind(self).call(*args, &block)
-      req = CrapiDocs::Request.new(*args)
-      res = CrapiDocs::Response.new(*result)
-      CrapiDocs.session.track(req, res)
+      CrapiDocs.session.track(args, result)
       result
     end
   end
@@ -21,6 +17,7 @@ end
 
 module CrapiDocs
   VERSION = [0, 1]
+  TEMPLATE_DIR = File.expand_path('../..', __FILE__) + '/templates'
 
   class << self
     attr_reader :session

@@ -1,7 +1,35 @@
 ## Endpoints
 
-{routes}
+<% @session.paths.each do |path| %>
+* [<%= path %>](#<%= anchor(path) %>)
+<% end %>
 
 ## Details
 
-{details}
+<% @session.paths.each do |path| %>
+### <a name="<%= anchor(path) %>"></a><%= path %>
+
+<% @session.methods(path).each do |method| %>
+#### <%= method %>
+
+<% params = @session.params(path, method) %>
+<% if params %>
+Parameters:
+
+```json
+<%= JSON.pretty_generate(params) %>
+```
+<% end %>
+
+<% body = @session.body(path, method) %>
+<% if body %>
+Example response:
+
+```json
+<%= JSON.pretty_generate(body) %>
+```
+<% end %>
+
+<% end %>
+
+<% end %>

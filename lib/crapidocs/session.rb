@@ -1,26 +1,80 @@
 module CrapiDocs
   class Session
-    attr_reader :results
-
     def initialize(pattern)
       @pattern = pattern
-      @results = Hash.new { |h, k| h[k] = {} }
+      @actions = {}
     end
 
-    def track(req, res)
-      return unless relevant?(req.uri)
+    def track(args, result)
+      uri, env = args
+      status, headers, body = result
+      body = body.respond_to?(:body) ? body.body : ''
+      method = env['REQUEST_METHOD']
 
-      path = clean_path(req.uri.path)
+      return unless relevant?(uri)
 
-      @results[path][req.method] ||= []
-      @results[path][req.method] << { req: req, res: res }
+      action = {
+        request: {
+          method: method,
+          body: env['rack.input'].string,
+          headers: env,
+          uri: uri
+        },
+        response: {
+          status: status,
+          headers: headers,
+          body: body
+        }
+      }
+
+      path = cleaned_path(uri)
+      @actions[path] ||= {}
+      @actions[path][method] ||= []
+      @actions[path][method] << action
+    end
+
+    def paths
+      @actions.keys.sort
+    end
+
+    def methods(path)
+      @actions[path].keys.sort
+    end
+
+    def params(path, method)
+      reqs = @actions[path][method].map { |a| a[:request] }
+      params = merge_params(reqs)
+      return nil unless params.keys.any?
+      params
+    end
+
+    def body(path, method)
+      res = @actions[path][method]
+        .lazy
+        .map { |a| a[:response] }
+        .find { |r| r[:status] / 100 == 2 }
+      return nil unless res
+      JSON.parse(res[:body])
     end
 
     private
 
-    def clean_path(path)
+    def merge_params(reqs)
+      params = reqs.reduce({}) do |hash, r|
+        ps = if r[:headers]['Content-Type'] =~ /json/
+          JSON.parse(r[:body]) rescue {}
+        else
+          Rack::Utils.parse_nested_query(r[:body])
+        end
+        hash.merge(ps)
+      end
+      params.delete('format')
+      params
+    end
+
+    def cleaned_path(uri)
       last = nil
-      path.split('/').reject(&:blank?).reduce('') do |cleaned, part|
+      uri.path.split('/').reject(&:blank?).reduce('') do |cleaned, part|
         part = ":#{last.singularize}_id" if part =~ /^\d+$/
         part = ':token' if tokenish?(part)
         last = part
@@ -33,7 +87,7 @@ module CrapiDocs
     end
 
     def relevant?(uri)
-      uri.to_s =~ @pattern
+      (uri.to_s =~ @pattern).present?
     end
   end
 end
