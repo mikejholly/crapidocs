@@ -2,9 +2,9 @@
 
 ## About
 
-CrapiDocs generates API documentation automagically using. It requires _zero_ annotations,
-declarations or custom comments. Simply add the below code to your tests and the documentation will
-appear before your eyes (don't forget to run your tests first).
+CrapiDocs generates API documentation automagically using your tests. It requires _zero_
+annotations, declarations or custom comments. Simply add the below code to your tests and the
+documentation will appear before your eyes (don't forget to run your tests first).
 
 ## Usage
 
