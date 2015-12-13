@@ -51,3 +51,5 @@ module CrapiDocs
     end
   end
 end
+
+at_exit { CrapiDocs.done if CrapiDocs.on? }

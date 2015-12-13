@@ -7,7 +7,6 @@ require_relative 'app'
 require_relative '../lib/crapidocs'
 
 CrapiDocs.start(%r{/}, 'api.md')
-at_exit { CrapiDocs.done if CrapiDocs.on? }
 
 describe 'App' do
   include Rack::Test::Methods

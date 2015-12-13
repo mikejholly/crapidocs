@@ -50,7 +50,6 @@ module CrapiDocs
 
     def body(path, method)
       res = @actions[path][method]
-        .lazy
         .map { |a| a[:response] }
         .find { |r| r[:status] / 100 == 2 }
       return nil unless res
