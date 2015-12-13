@@ -28,7 +28,7 @@ That's it! A `doc/api.md` file will be generated after your tests complete!
 
 ## Example
 
-![Example](http://i.imgur.com/X5spkte.jpg)
+![Example](http://i.imgur.com/NZZAS7D.png)
 
 Check out the [examples](/example) directory for example output and working tests.
 
