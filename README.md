@@ -1,6 +1,4 @@
-# CrapiDocs
-
-Crazy RSpec API Docs
+# CrapiDocs - Crazy RSpec API Docs
 
 ## About
 
