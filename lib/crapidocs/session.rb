@@ -53,19 +53,20 @@ module CrapiDocs
         .map { |a| a[:response] }
         .find { |r| r[:status] / 100 == 2 }
       return nil unless res
-      JSON.parse(res[:body])
+      parse_body(res[:body])
     end
 
     private
 
+    def parse_body(body)
+      JSON.parse(body)
+    rescue
+      Rack::Utils.parse_nested_query(body)
+    end
+
     def merge_params(reqs)
       params = reqs.reduce({}) do |hash, r|
-        ps = if r[:headers]['Content-Type'] =~ /json/
-          JSON.parse(r[:body]) rescue {}
-        else
-          Rack::Utils.parse_nested_query(r[:body])
-        end
-        hash.merge(ps)
+        hash.merge(parse_body(r[:body]))
       end
       params.delete('format')
       params

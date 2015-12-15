@@ -1,5 +1,4 @@
 require 'rack/test'
-require 'active_support/all'
 
 require_relative 'crapidocs/formatter'
 require_relative 'crapidocs/session'
@@ -16,7 +15,7 @@ module Rack
 end
 
 module CrapiDocs
-  VERSION = [0, 1, 2]
+  VERSION = [0, 1, 3]
   TEMPLATE_DIR = File.expand_path('../..', __FILE__) + '/templates'
 
   class << self
