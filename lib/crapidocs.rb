@@ -16,7 +16,7 @@ module Rack
 end
 
 module CrapiDocs
-  VERSION = [0, 1, 3]
+  VERSION = [0, 1, 4]
   TEMPLATE_DIR = File.expand_path('../..', __FILE__) + '/templates'
 
   class << self
