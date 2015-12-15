@@ -1,3 +1,4 @@
+require 'active_support/all'
 require 'rack/test'
 
 require_relative 'crapidocs/formatter'
