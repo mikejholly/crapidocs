@@ -8,6 +8,6 @@ Gem::Specification.new do |s|
   s.description = 'Generate decent API documentation from RSpec API tests.'
   s.authors     = ['Mike Holly']
   s.email       = 'mikejholly@gmail.com'
-  s.files       = Dir['lib/**/**']
+  s.files       = Dir['lib/**/**', 'templates/*']
   s.homepage    = 'https://rubygems.org/gems/crapidocs'
 end
