@@ -5,6 +5,7 @@ gem 'activesupport'
 gem 'erubis'
 
 group :development do
+  gem 'parallel_tests'
   gem 'simplecov'
   gem 'rspec'
   gem 'pry'
