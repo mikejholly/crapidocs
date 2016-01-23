@@ -2,6 +2,8 @@
 
 * [/people](#people)
 * [/people/:person_id](#peoplepersonid)
+* [/places](#places)
+* [/places/:place_id](#placesplaceid)
 
 ## Details
 
@@ -58,6 +60,60 @@ Example response:
   "id": 1,
   "occupation": "Developer",
   "gender": "Male"
+}
+```
+
+
+### <a name="places"></a>/places
+
+#### GET
+
+
+Example response:
+
+```json
+[
+  {
+    "name": "Vancouver",
+    "id": 1,
+    "weather": "Rainy"
+  }
+]
+```
+
+#### POST
+
+Parameters:
+
+```json
+{
+  "name": "Vancouver"
+}
+```
+
+Example response:
+
+```json
+{
+  "name": "Vancouver",
+  "id": 1,
+  "weather": "Rainy"
+}
+```
+
+
+### <a name="placesplaceid"></a>/places/:place_id
+
+#### GET
+
+
+Example response:
+
+```json
+{
+  "name": "Vancouver",
+  "id": 1,
+  "weather": "Rainy"
 }
 ```
 

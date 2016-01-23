@@ -19,6 +19,9 @@ GEM
     method_source (0.8.2)
     minitest (5.8.2)
     multi_json (1.11.2)
+    parallel (1.6.1)
+    parallel_tests (2.2.1)
+      parallel
     pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -65,6 +68,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   erubis
+  parallel_tests
   pry
   pry-byebug
   rack-test

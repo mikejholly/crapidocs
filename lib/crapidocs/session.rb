@@ -1,5 +1,7 @@
 module CrapiDocs
   class Session
+    attr_reader :actions
+
     def initialize(pattern)
       @pattern = pattern
       @actions = {}
@@ -17,8 +19,7 @@ module CrapiDocs
         request: {
           method: method,
           body: env['rack.input'].string,
-          headers: env,
-          uri: uri
+          headers: clean_headers(env)
         },
         response: {
           status: status,
@@ -27,7 +28,7 @@ module CrapiDocs
         }
       }
 
-      path = cleaned_path(uri)
+      path = clean_path(uri.path)
       @actions[path] ||= {}
       @actions[path][method] ||= []
       @actions[path][method] << action
@@ -56,6 +57,13 @@ module CrapiDocs
       parse_body(res[:body])
     end
 
+    def merge(sessions)
+      sessions = [sessions] unless sessions.is_a?(Array)
+      @actions = sessions.reduce(@actions) do |a, session|
+        a.deep_merge(session.actions)
+      end
+    end
+
     private
 
     def parse_body(body)
@@ -72,9 +80,13 @@ module CrapiDocs
       params
     end
 
-    def cleaned_path(uri)
+    def clean_headers(headers)
+      headers.delete_if { |k, _v| k =~ /^(sinatra|rack)\./ }
+    end
+
+    def clean_path(path)
       last = nil
-      uri.path.split('/').reject(&:blank?).reduce('') do |cleaned, part|
+      path.split('/').reject(&:blank?).reduce('') do |cleaned, part|
         part = ":#{last.singularize}_id" if part =~ /^\d+$/
         part = ':token' if tokenish?(part)
         last = part
@@ -83,7 +95,7 @@ module CrapiDocs
     end
 
     def tokenish?(s)
-      s =~ /\d+/ && s =~ /[a-zA-Z]+/ && s.length >= 10
+      (s =~ /\d+/ && s =~ /[a-zA-Z]+/ && s.length >= 10) == true
     end
 
     def relevant?(uri)

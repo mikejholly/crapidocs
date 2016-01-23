@@ -1,24 +1,33 @@
 describe CrapiDocs::Session do
   let(:pattern) { /path/ }
+  let(:uri_path) { '/path/to/thing' }
+  let(:uri) { double(:uri, to_s: uri_path, path: uri_path) }
+  let(:env) do
+    { 'REQUEST_METHOD' => 'GET',
+      'rack.input' => double(:input, string: 'foo') }
+  end
+  let(:status) { 200 }
+  let(:headers) { { 'Content-Type' => 'application/json' } }
+  let(:body) { { foo: 1 }.to_json }
+  let(:args) { [uri, env] }
+  let(:result) { [status, headers, body] }
+
   subject { described_class.new(pattern) }
 
   describe '#track' do
-    it 'returns nil if request uri does not match the pattern' do
-      req = double(:req, uri: 'hello')
-      res = double(:res)
-      expect(subject.track(req, res)).to be nil
+    it 'records the request and response' do
+      subject.track(args, result)
+      expect(subject.actions).to include
+      expect(subject.actions[uri_path]).to include 'GET'
+      expect(subject.actions[uri_path]['GET'].length).to eq 1
+      expect(subject.actions[uri_path]['GET'][0]).to include :request, :response
     end
 
-    it 'records the request and response if the uri does match' do
-      uri = double(:uri, path: 'path', to_s: 'path')
-      req = double(:req, uri: uri, method: 'GET')
-      res = double(:res)
-
-      subject.track(req, res)
-
-      expected = { '/path' => { 'GET' => [{ req: req, res: res }] } }
-
-      expect(subject.results).to eq expected
+    context 'uri does not match the desired pattern' do
+      let(:uri_path) { 'non/match' }
+      it 'returns nil' do
+        expect(subject.track(args, result)).to be nil
+      end
     end
   end
 
