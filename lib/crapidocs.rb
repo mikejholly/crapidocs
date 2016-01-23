@@ -16,7 +16,7 @@ module Rack
 end
 
 module CrapiDocs
-  VERSION = [0, 2, 0]
+  VERSION = [0, 2, 1]
   TEMPLATE_DIR = File.expand_path('../..', __FILE__) + '/templates'
   PARALLEL = ENV['PARALLEL_TEST_GROUPS'] && defined?(ParallelTests)
   SESSION_FILE_PREFIX = 'crapi-session.'

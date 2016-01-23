@@ -81,7 +81,7 @@ module CrapiDocs
     end
 
     def clean_headers(headers)
-      headers.delete_if { |k, _v| k =~ /^(sinatra|rack)\./ }
+      headers.delete_if { |_k, v| !v.is_a?(String) }
     end
 
     def clean_path(path)
