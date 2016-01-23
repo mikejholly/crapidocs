@@ -19,6 +19,7 @@ module CrapiDocs
   VERSION = [0, 1, 4]
   TEMPLATE_DIR = File.expand_path('../..', __FILE__) + '/templates'
   PARALLEL = ENV['PARALLEL_TEST_GROUPS'] && defined?(ParallelTests)
+  SESSION_FILE_PREFIX = 'crapi-session.'
 
   class << self
     attr_reader :session
@@ -51,23 +52,26 @@ module CrapiDocs
 
     def handle_parallel
       return write_session unless ParallelTests.first_process?
-
       ParallelTests.wait_for_other_processes_to_finish
-
       @session.merge(load_sessions)
     end
 
     def write_session
-      file = format('%s/crapi-session.%d', @tmp, ENV['TEST_ENV_NUMBER'])
-      File.open(file, 'w') { |f| f.write(Marshal.dump(@session)) }
+      file = format('%s/%s.%d', @tmp, SESSION_FILE_PREFIX, ENV['TEST_ENV_NUMBER'])
+      File.open(session_file, 'w') do |f|
+        f.write(Marshal.dump(@session))
+      end
     end
 
     def load_sessions
-      Dir["#{@tmp}/crapi-session.*"].map do |f|
-        data = File.open(f).read
-        File.unlink(f)
-        Marshal.load(data)
-      end
+      glob = "#{@tmp}/#{SESSION_FILE_PREFIX}*"
+      Dir[glob].map { |f| load_session(f) }
+    end
+
+    def load_session(file)
+      data = File.open(file).read
+      File.unlink(file)
+      Marshal.load(data)
     end
 
     def write_file(data)
